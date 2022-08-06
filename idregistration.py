@@ -1,5 +1,9 @@
 import sqlite3
 
+
+con = sqlite3.connect("idregistration.db")
+cur = con.cursor()
+
 def studentData():
     con = sqlite3.connect("idregistration.db")
     cur = con.cursor()
