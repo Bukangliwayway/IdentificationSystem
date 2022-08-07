@@ -50,8 +50,11 @@ class Student:
       #WILL ADDs
       
     def addData():
+      # if stdNo.get() == "":
+      #   tkinter.messagebox.askyesno("Enter Correct Data")
+      # else:
       if(len(stdNo.get())!=0):
-        idregistration.addStdRec(
+        idregistration.addstudent(
             stdNo.get(), 
             stdName.get(), 
             stdAddress.get(),
@@ -72,10 +75,29 @@ class Student:
             stdGuardianNo.get()))
     
     def display():
-      return
+      # studentlist.delete(0,END)
+      # for row in dbbackend.viewData():
+      #   self.studentlist.insert(END, row, str(""))
+      result = idregistration.viewData() #Database
+      if len(result) != 0:
+        self.studentlist.delete(*self.studentlist.get_children())
+        for row in result:
+          self.studentlist.insert('', END, values=row)
 
-
-
+    def studentRec():
+      global sd
+      iDelete()
+      viewInfo = self.studentlist.focus()
+      learnerData = self.studentlist.item(viewInfo)
+      sd = learnerData['values']
+      
+      self.lblStdNo.insert(END, sd[1])
+      self.lblStdName.insert(END, sd[2])
+      self.lblStdAddress.insert(END, sd[3])
+      self.lblStdContact.insert(END, sd[4])
+      self.lblStdEmail.insert(END, sd[5])
+      self.lblStdGuardian.insert(END, sd[6])
+      self.lblStdGuardianNo.insert(END, sd[7])
 
 
 # ----------------------UI-------------
@@ -158,6 +180,7 @@ class Student:
     scrolly = Scrollbar(rightFrameInner, orient = VERTICAL)
 
     self.studentlist= ttk.Treeview(rightFrameInner, height=12, columns=("stdNo", "stdName", "stdAddress", "stdContact", "stdEmail", "stdGuardian", "stdGuardianNo"),show='headings', selectmode="browse", xscrollcommand=scrollx.set,yscrollcommand=scrolly.set)
+    self.studentlist.bind("<ButtonRelease-1>", studentRec)
 
     style = ttk.Style()
     # this is set background and foreground of the treeview

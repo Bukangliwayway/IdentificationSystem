@@ -1,9 +1,6 @@
 import sqlite3
 
 
-con = sqlite3.connect("idregistration.db")
-cur = con.cursor()
-
 def studentData():
     con = sqlite3.connect("idregistration.db")
     cur = con.cursor()
@@ -14,8 +11,9 @@ def studentData():
 def addstudent(Student_Number, Student_Name, Student_Address, Contact_Number, Student_Email, Guardian_Name, PContactNumber):
     con = sqlite3.connect("idregistration.db")
     cur = con.cursor()
-    cur.execute("INSERT INTO student VALUES (NULL, ?,?,?,?,?"),\
-    (Student_Number, Student_Name, Student_Address, Contact_Number, Student_Email, Guardian_Name, PContactNumber)
+    # cur.execute("INSERT INTO student VALUES (NULL, ?,?,?,?,?,?"),\
+    # (Student_Number, Student_Name, Student_Address, Contact_Number, Student_Email, Guardian_Name, PContactNumber)
+    cur.execute("INSERT INTO student VALUES (NULL, ?,?,?,?,?,?,?)" ,(Student_Number, Student_Name, Student_Address, Contact_Number, Student_Email, Guardian_Name, PContactNumber))
     con.commit()
     con.close()
 
