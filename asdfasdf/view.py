@@ -14,9 +14,7 @@ class View:
         
         self.key = key
         self.database = connect("data/database.db")
-        self.image_student_male = ImageTk.PhotoImage(Image.open("res/student_male_icon.png"))
-        self.image_student_female = ImageTk.PhotoImage(Image.open("res/student_female_icon.png"))
-        self.image_student_generic = ImageTk.PhotoImage(Image.open("res/student_generic_icon.png"))
+
         
         self.id = tk.StringVar()
         self.name = tk.StringVar()
@@ -48,18 +46,6 @@ class View:
         self.main = tk.Frame(self.root, bg="#FFFFFF")
         self.main.pack(fill="both")
         
-        self.frame_photo = tk.Frame(self.main, bg="#FFFFFF")
-        self.frame_photo.pack(fill="x")
-        
-        if self.gender.get() == "Male":
-            self.image_student = self.image_student_male 
-        elif self.gender.get() == "Female":
-            self.image_student = self.image_student_female
-        else:
-            self.image_student = self.image_student_generic
-        
-        self.label_photo = tk.Label(self.frame_photo, image=self.image_student, width=10, anchor="center", bg="#FFFFFF",)
-        self.label_photo.pack(side="top", fill="both", pady=15)
         
         self.frame_id = tk.Frame(self.main, bg="#F3F4F6")
         self.frame_id.pack(fill="x")

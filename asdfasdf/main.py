@@ -10,15 +10,12 @@ from course import Course
 class Main:
     def __init__(self, root):
         self.root = root
-        self.root.title("Simple Student Information System 2")
+        self.root.title("Simple Student Information System")
         self.root.geometry("875x575")
         self.root.resizable(width=False, height=False)
         self.root.configure(background="#FFFFFF")
         
         self.database = connect("data/database.db")
-        self.image_student_male = ImageTk.PhotoImage(Image.open("res/student_male_icon_small.png"))
-        self.image_student_female = ImageTk.PhotoImage(Image.open("res/student_female_icon_small.png"))
-        self.image_student_generic = ImageTk.PhotoImage(Image.open("res/student_generic_icon_small.png"))
         
         self.search_result = tk.StringVar()
         self.search_category = tk.StringVar()
@@ -64,20 +61,18 @@ class Main:
         self.table_heading = tk.Frame(self.frame_table, bg="#FFFFFF")
         self.table_heading.pack(fill="x")
         
-        self.heading_photo = tk.Label(self.table_heading, text="Photo", font=("Arial", 8, "bold"), width=15, anchor="center", bg="#FFFFFF")
-        self.heading_photo.grid(row=0, column=0, padx=10, pady=5)
-        
+        #LABEL HEAD
         self.heading_roll = tk.Label(self.table_heading, text="ID Number", font=("Arial", 8, "bold"), width=8, anchor="center", bg="#FFFFFF")
-        self.heading_roll.grid(row=0, column=1, padx=10, pady=5)
+        self.heading_roll.grid(row=0, column=0, padx=10, pady=5)
         
         self.heading_name = tk.Label(self.table_heading, text="Student Name", font=("Arial", 8, "bold"), width=25, anchor="center", bg="#FFFFFF")
-        self.heading_name.grid(row=0, column=2, padx=10, pady=5)
+        self.heading_name.grid(row=0, column=1, padx=10, pady=5)
         
         self.heading_course = tk.Label(self.table_heading, text="Course", font=("Arial", 8, "bold"), width=20, anchor="center",  bg="#FFFFFF")
-        self.heading_course.grid(row=0, column=3, padx=10, pady=5)
+        self.heading_course.grid(row=0, column=2, padx=10, pady=5)
         
         self.heading_actions = tk.Label(self.table_heading, text="Actions", font=("Arial", 8, "bold"), width=22, anchor="center", bg="#FFFFFF")
-        self.heading_actions.grid(row=0, column=4, padx=35, pady=5)
+        self.heading_actions.grid(row=0, column=3, padx=35, pady=5)
         
         self.table_line = tk.Frame(self.frame_table, height=2, bg="#D2D2D2")
         self.table_line.pack(fill="x")
@@ -103,19 +98,11 @@ class Main:
             
             self.name, self.gender, self.course = self.database.display_row(key)
             self.color = "#F3F4F6" if not row % 2 else "#FFFFFF"
-            
-            if self.gender == "Male":
-                self.image_student = self.image_student_male
-            elif self.gender == "Female":
-                self.image_student = self.image_student_female
-            else:
-                self.image_student = self.image_student_generic
+
             
             self.frame_row = tk.Frame(self.table_rows, bg=self.color)
             self.frame_row.pack(fill="x")
             
-            self.row_photo = tk.Label(self.frame_row, image=self.image_student, width=107, anchor="center", bg=self.color,)
-            self.row_photo.grid(row=row, column=0, padx=10, pady=0)
             
             self.row_roll = tk.Label(self.frame_row, text=key, font=("Arial", 8), width=9, anchor="center", bg=self.color, fg="#6D99BC")
             self.row_roll.grid(row=row, column=1, padx=12, pady=30)
