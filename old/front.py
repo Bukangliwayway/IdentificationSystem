@@ -2,18 +2,24 @@ from tkinter import*
 # import stdDB_BackEnd
 from tkinter import ttk
 import random
-import tkinter.messagebox 
+import tkinter.messagebox
 import datetime
 # import pymysql
 import time
-import tempfile,os
+import tempfile
+import os
 from turtle import color, left, right, title
 
+# Backend
+import idregistration
+
+
 class Student:
-  def __init__(self,root):
+  def __init__(self, root):
     self.root = root
     self.root.title("Student Identification System")
-    self.root.geometry("1350x800+0+0")
+    self.root.geometry("1300x700")
+    # self.root.resizable(False, False)
 
     stdNo = StringVar()
     stdName = StringVar()
@@ -23,10 +29,83 @@ class Student:
     stdGuardian = StringVar()
     stdGuardianNo = StringVar()
 
+
+# Function
+# --------------------------------------FUNCTIONS-------------------------------------------------------------------
+    def iExit():
+      iExit = tkinter.messagebox.askyesno("Student Identification System", "Confirm if you want to exit")
+      if iExit > 0:
+        root.destroy()
+        return    
+        
+    def iDelete():
+      #self.lblTitle.delete(0, END)
+      self.lblStdNo.delete(0, END)
+      self.lblStdName.delete(0, END)
+      self.lblStdAddress.delete(0, END)
+      self.lblStdContact.delete(0, END)
+      self.lblStdEmail.delete(0, END)
+      self.lblStdGuardian.delete(0, END)
+      self.lblStdGuardianNo.delete(0, END)
+      #WILL ADDs
+      
+    def addData():
+      # if stdNo.get() == "":
+      #   tkinter.messagebox.askyesno("Enter Correct Data")
+      # else:
+      if(len(stdNo.get())!=0):
+        idregistration.addstudent(
+            stdNo.get(), 
+            stdName.get(), 
+            stdAddress.get(),
+            stdContact.get(),
+            stdEmail.get(),
+            stdGuardian.get(),
+            stdGuardianNo.get())
+        #self.studentlist.delete(0, END)
+        
+        super(self.studentlist, self).delete()
+        self.studentlist.insert(END, (
+            stdNo.get(), 
+            stdName.get(), 
+            stdAddress.get(),
+            stdContact.get(),
+            stdEmail.get(),
+            stdGuardian.get(),
+            stdGuardianNo.get()))
+    
+    def display():
+      # studentlist.delete(0,END)
+      # for row in dbbackend.viewData():
+      #   self.studentlist.insert(END, row, str(""))
+      result = idregistration.viewData() #Database
+      if len(result) != 0:
+        self.studentlist.delete(*self.studentlist.get_children())
+        for row in result:
+          self.studentlist.insert('', END, values=row)
+
+    def studentRec():
+      global sd
+      iDelete()
+      viewInfo = self.studentlist.focus()
+      learnerData = self.studentlist.item(viewInfo)
+      sd = learnerData['values']
+      
+      self.lblStdNo.insert(END, sd[1])
+      self.lblStdName.insert(END, sd[2])
+      self.lblStdAddress.insert(END, sd[3])
+      self.lblStdContact.insert(END, sd[4])
+      self.lblStdEmail.insert(END, sd[5])
+      self.lblStdGuardian.insert(END, sd[6])
+      self.lblStdGuardianNo.insert(END, sd[7])
+
+
+# ----------------------UI-------------
+
     MainFrame = Frame(self.root, bd=5, width=1325, height=735, relief= "sunken", bg="gray")
     MainFrame.grid()
 
-    #Setting Frames
+    # Setting Frames
     lowerFrame = Frame(MainFrame,width=1315, height=50, bg="gray")
     lowerFrame.grid(row=2, column=0, pady=20)
     Title = Frame(MainFrame,width=1315, height=100, bg="gray")
@@ -45,12 +124,12 @@ class Student:
     rightFrameInner.pack(side=TOP, padx=10)
 
 
-    #Label: Title
+    # Label: Title
     self.lblTitle = Label(Title, font=('helvetica',56,'bold'),text="Student Identification System", bg='gray')
     self.lblTitle.grid(row=0, column=0, padx=132, pady=30)
 
 
-    #Label: Input Fields
+    # Label: Input Fields
     self.lblStdNo = Label(leftFrameInner, font=('helvetica',12,'bold'),text="Student Number", anchor='w', justify=LEFT, bg='gray')
     self.lblStdNo.grid(row=0, column=0, sticky=W)
     
@@ -73,7 +152,7 @@ class Student:
     self.lblStdGuardianNo.grid(row=6, column=0, sticky=W)
 
 
-    #Input: Input Fields
+    # Input: Input Fields
     self.inpStdNo = Entry(leftFrameInner, font = ('arial',12,'bold'), bd=5, width=40, justify='left', bg='gray', textvariable=stdNo)
     self.inpStdNo.grid(row=0,column=1)
     
@@ -96,11 +175,12 @@ class Student:
     self.inpStdGuardianNo.grid(row=6,column=1)
 
 
-    #Data
+    # Data
     scrollx = Scrollbar(rightFrameInner, orient = HORIZONTAL)
     scrolly = Scrollbar(rightFrameInner, orient = VERTICAL)
 
     self.studentlist= ttk.Treeview(rightFrameInner, height=12, columns=("stdNo", "stdName", "stdAddress", "stdContact", "stdEmail", "stdGuardian", "stdGuardianNo"),show='headings', selectmode="browse", xscrollcommand=scrollx.set,yscrollcommand=scrolly.set)
+    self.studentlist.bind("<ButtonRelease-1>", studentRec)
 
     style = ttk.Style()
     # this is set background and foreground of the treeview
@@ -133,12 +213,16 @@ class Student:
 
     self.studentlist.pack(fill = BOTH, expand=1)
 
-    self.btnAdd = Button(lowerFrame, font = ('arial',20,'bold'), text="Add", width=12, height=2, bg="gray").grid(row=0,column=0,padx=10)
-    self.btnEdit = Button(lowerFrame, font = ('arial',20,'bold'), text="Edit", width=12, height=2, bg="gray").grid(row=0,column=1,padx=10)
-    self.btnDelete = Button(lowerFrame, font = ('arial',20,'bold'), text="Delete", width=12, height=2, bg="gray").grid(row=0,column=2,padx=10)
+    self.btnAdd = Button(lowerFrame, font = ('arial',20,'bold'), text="Add", width=12, height=2, bg="gray", command = addData).grid(row=0,column=0,padx=10)
+    self.btnAdd = Button(lowerFrame, font = ('arial',20,'bold'), text="Display", width=12, height=2, bg="gray", command = display).grid(row=0,column=1,padx=10)
+    self.btnEdit = Button(lowerFrame, font = ('arial',20,'bold'), text="Edit", width=12, height=2, bg="gray").grid(row=0,column=2,padx=10)
+    self.btnDelete = Button(lowerFrame, font = ('arial',20,'bold'), text="Delete", width=12, height=2, bg="gray", command = iDelete).grid(row=0,column=3,padx=10)
+    self.btnExit = Button(lowerFrame, font = ('arial',20,'bold'), text="Exit", width=12, height=2, bg="gray", command=iExit).grid(row=0,column=4,padx=10)
+
 
 if __name__=='__main__':
   root = Tk()
   application = Student(root)
+  root.resizable(False, False)
   root.mainloop()
       
