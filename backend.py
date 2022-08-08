@@ -31,11 +31,9 @@ def deleteRec(Student_Number):
     con.commit()
     con.close
 
-
 def editRec(Student_Number, Student_Name, Student_Address, Contact_Number, Student_Email, Guardian_Name, PContactNumber,id):
     con = sqlite3.connect("main.db")
     cur = con.cursor()
     cur.execute("update student set Student_Number=?, Student_Name=?, Student_Address=?, Contact_Number=?, Student_Email=?, Guardian_Name=?, PContact_Number=? where student_number=?", (Student_Number, Student_Name, Student_Address, Contact_Number, Student_Email, Guardian_Name, PContactNumber,id))
-
     con.commit()
     con.close()
