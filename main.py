@@ -1,4 +1,6 @@
+import string
 from tkinter import *
+from xml.etree.ElementTree import tostring
 import backend
 
 from tkinter import ttk
@@ -14,8 +16,7 @@ import tempfile, os
 class Student:
     def __init__(self, root):
         self.root = root
-        blank_space = " "
-        self.root.title(200 * blank_space + "Student Management System")
+        self.root.title("Student Management System")
         self.root.geometry("1450x600+0+0")
         
         Student_Number = StringVar()
@@ -50,7 +51,7 @@ class Student:
             
         def addData():
             if Student_Number.get() == "" or Student_Name.get() == "":
-                tkinter.messagebox.askyesno("Enter Correct Number")
+                tkinter.messagebox.showerror("Error!","Every fields are required!")
             else:
                 backend.addstudent(
                     Student_Number.get(),
@@ -60,16 +61,34 @@ class Student:
                     Student_Email.get(),
                     Guardian_Name.get(),
                     PContact_Number.get())
-                super(self.studentlist, self).delete()
-                self.studentlist.insert(END, (
-                    Student_Number.get(),
-                    Student_Name.get(),
-                    Student_Address.get(),
-                    Contact_Number.get(),
-                    Student_Email.get(),
-                    Guardian_Name.get(),
-                    PContact_Number.get()))
+                iReset()
+                displayData()
+                tkinter.messagebox.showinfo("Data Entry Form", "Data Successfully Added")
+
+                # super(self,self.studentlist).delete()
+                # self.studentlist.insert(END, (
+                #     Student_Number.get(),
+                #     Student_Name.get(),
+                #     Student_Address.get(),
+                #     Contact_Number.get(),
+                #     Student_Email.get(),
+                #     Guardian_Name.get(),
+                #     PContact_Number.get()))
         
+        def editData():
+            backend.editRec(
+                Student_Number.get(),
+                Student_Name.get(),
+                Student_Address.get(),
+                Contact_Number.get(),
+                Student_Email.get(),
+                Guardian_Name.get(),
+                PContact_Number.get(),
+                prevID)
+            iReset()
+            displayData()
+            tkinter.messagebox.showinfo("Data Entry Form", "Data Successfully Updated")
+
         def displayData():
             result = backend.viewData()
             if len(result) != 0:
@@ -78,33 +97,38 @@ class Student:
                     self.studentlist.insert('', END, values=row)
         
         def deleteData():
-            if (len(Student_Number.get() != 0)):
-                backend.deleteRec(sd[0])
-                iReset()
-                displayData()
-                tkinter.messagebox.showinfo("Data Entry Form", "Data Successfully Deleted")
+            global sd
+            if (len(Student_Number.get()) != ''):
+                if(tkinter.messagebox.askyesno("Student Management System", "Are You Sure You Want To Delete\n" + str(sd[1]) + " ?")):
+                    backend.deleteRec(sd[0])
+                    iReset()
+                    displayData()
+                    tkinter.messagebox.showinfo("Data Entry Form", "Data Successfully Deleted")
 
-        def studentRec():
+        def studentRec(event):
             global sd
             iReset()
             viewInfo = self.studentlist.focus()
-            learnerData = self.studentlist.Item(viewInfo)
+            learnerData = self.studentlist.item(viewInfo)
             sd = learnerData['values']
             
+        def displayInfos():
             #STUDENTNUMBER
-            self.txtStudent_Number.insert(END, sd[1])
+            self.txtStudent_Number.insert(END, sd[0])
             #STUDENTNAME
-            self.txtStudent_Name.insert(END, sd[2])
+            self.txtStudent_Name.insert(END, sd[1])
             #STUDENTADDRESS
-            self.txtStudent_Address.insert(END, sd[3])
+            self.txtStudent_Address.insert(END, sd[2])
             #CONTACT NUMBER
-            self.txtContactNumber.insert(END, sd[4])
+            self.txtContactNumber.insert(END, sd[3])
             #STUDENTEMAIL
-            self.txtStudent_Email.insert(END, sd[5])
+            self.txtStudent_Email.insert(END, sd[4])
             #GUARDIAN NAME
-            self.txtGuardian_Name.insert(END, sd[6])
+            self.txtGuardian_Name.insert(END, sd[5])
             #GUARDIAN NUMBER
-            self.txtPContact_Number.insert(END, sd[7])
+            self.txtPContact_Number.insert(END, sd[6])
+            global prevID 
+            prevID = sd[0] # for editing purposes
 #---------------------------------------------------------------------------------------------------------------------#
         MainFrame = Frame(self.root, bd=10, bg="gray", width=1300, height=700, relief=RIDGE)
         MainFrame.grid()
@@ -129,7 +153,7 @@ class Student:
 
 #---------------------------------------------------------------------------------------------------------------------#
         self.lblTitle = Label(Title, text="Student Information System", font=("Arial", 40, "bold"), bg="gray", fg="white")
-        self.lblTitle.grid(row=0, column=0, padx=132)
+        self.lblTitle.grid(row=0, column=0, padx=100)
 
 #---------------------------------------------------------------------------------------------------------------------#
         #STUDENTNUMBER
@@ -168,9 +192,9 @@ class Student:
         
         #GUARDIAN NUMBER
         self.lblPContact_Number = Label(leftFrameInner, text="Guardian Number", font=("Arial", 12, "bold"), bg="gray", fg="black", anchor=W, justify=LEFT)
-        self.lblPContact_Number.grid(row=5, column=0, padx=5, sticky=W)
+        self.lblPContact_Number.grid(row=6, column=0, padx=5, sticky=W)
         self.txtPContact_Number = Entry(leftFrameInner, font=("Arial", 12, "bold"), bg="white", fg="black", width = 40, justify='left', textvariable=PContact_Number)
-        self.txtPContact_Number.grid(row=5, column=1)
+        self.txtPContact_Number.grid(row=6, column=1)
 
 #---------------------------------------------------------------------------------------------------------------------#
         #UI DISPLAY OF DATA
@@ -215,8 +239,8 @@ class Student:
         
         self.btnAdd = Button(lowerFrame, font = ('arial',20,'bold'), text="Add", width=12, height=2, bg="gray", command=addData).grid(row=0,column=0,padx=10)
         self.btnClear = Button(lowerFrame, font = ('arial',20,'bold'), text="Clear", width=12, height=2, bg="gray", command=iReset).grid(row=0,column=1,padx=10)
-        self.btnDisplay = Button(lowerFrame, font = ('arial',20,'bold'), text="Display", width=12, height=2, bg="gray", command=displayData).grid(row=0,column=2,padx=10)
-        self.btnEdit = Button(lowerFrame, font = ('arial',20,'bold'), text="Edit", width=12, height=2, bg="gray").grid(row=0,column=3,padx=10)
+        self.btnDisplay = Button(lowerFrame, font = ('arial',20,'bold'), text="Display", width=12, height=2, bg="gray", command=displayInfos).grid(row=0,column=2,padx=10)
+        self.btnEdit = Button(lowerFrame, font = ('arial',20,'bold'), text="Edit", width=12, height=2, bg="gray", command=editData).grid(row=0,column=3,padx=10)
         self.btnDelete = Button(lowerFrame, font = ('arial',20,'bold'), text="Delete", width=12, height=2, bg="gray", command=deleteData).grid(row=0,column=4,padx=10)
         self.btnExit = Button(lowerFrame, font = ('arial',20,'bold'), text="Exit", width=12, height=2, bg="gray", command=iExit).grid(row=0,column=5,padx=10)
 
