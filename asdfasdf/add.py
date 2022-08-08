@@ -13,7 +13,6 @@ class Add:
         self.root.configure(background="#FFFFFF")
         
         self.database = connect("data/database.db")
-        self.image_add_student = ImageTk.PhotoImage(Image.open("res/student_generic_icon.png"))
         
         self.id = tk.StringVar()
         self.name = tk.StringVar()
@@ -32,11 +31,6 @@ class Add:
         self.main = tk.Frame(self.root, bg="#FFFFFF")
         self.main.pack(fill="both")
         
-        self.frame_photo = tk.Frame(self.main, bg="#FFFFFF")
-        self.frame_photo.pack(fill="x")
-        
-        self.label_photo = tk.Label(self.frame_photo, image=self.image_add_student, width=10, anchor="center", bg="#FFFFFF")
-        self.label_photo.pack(side="top", fill="both", pady=15)
         
         self.frame_id = tk.Frame(self.main, bg="#F3F4F6")
         self.frame_id.pack(fill="x")
