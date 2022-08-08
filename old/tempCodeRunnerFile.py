@@ -1,0 +1,1 @@
+self.studentlist.bind("<ButtonRelease-1>", studentRec)
