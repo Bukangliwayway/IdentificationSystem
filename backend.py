@@ -4,7 +4,15 @@ import sqlite3
 def studentData():
     con = sqlite3.connect("main.db")
     cur = con.cursor()
-    cur.execute("CREATE TABLE IF NOT EXISTS student (Student_Number text, Student_Name text, Student_Address text, Contact_Number text, Student_Email text, Guardian_Name text, PContact_Number text")
+    cur.execute('''CREATE TABLE IF NOT EXISTS student (
+        Student_Number text NOT NULL, 
+        Student_Name text, 
+        Student_Address text, 
+        Contact_Number text, 
+        Student_Email text, 
+        Guardian_Name text, 
+        PContact_Number text
+        ''')
     con.commit()
     con.close()
 
@@ -12,8 +20,7 @@ def studentData():
 def addstudent(Student_Number, Student_Name, Student_Address, Contact_Number, Student_Email, Guardian_Name, PContactNumber):
     con = sqlite3.connect("main.db")
     cur = con.cursor()
-    cur.execute("INSERT INTO student VALUES (?,?,?,?,?,?,?"),\
-    (Student_Number, Student_Name, Student_Address, Contact_Number, Student_Email, Guardian_Name, PContactNumber)
+    cur.execute("INSERT INTO student VALUES (?,?,?,?,?,?,?)",(Student_Number, Student_Name, Student_Address, Contact_Number, Student_Email, Guardian_Name, PContactNumber))
     con.commit()
     con.close()
 
