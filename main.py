@@ -2,7 +2,6 @@ import string
 from tkinter import *
 from xml.etree.ElementTree import tostring
 import backend
-
 from tkinter import ttk
 import random
 import tkinter.messagebox
@@ -17,7 +16,11 @@ class Student:
     def __init__(self, root):
         self.root = root
         self.root.title("Student Management System")
-        self.root.geometry("1450x600+0+0")
+        self.root.geometry("1200x600")
+        
+        self.Exit_Btn = PhotoImage(file="asset/btnExit.png")
+        
+        
         
         Student_Number = StringVar()
         Student_Name = StringVar()
@@ -26,6 +29,7 @@ class Student:
         Student_Email = StringVar()
         Guardian_Name = StringVar()
         PContact_Number = StringVar()
+        Student_Course = StringVar()
 #---------------------------------------------------------------------------------------------------------------------#
         def iExit():
             iExit = tkinter.messagebox.askyesno("Student Management System", "Confirm if you want to exit")
@@ -166,35 +170,44 @@ class Student:
         self.lblStudent_Name.grid(row=1, column=0, padx=5, sticky=W)
         self.txtStudent_Name = Entry(leftFrameInner, font=("Arial", 12, "bold"), bg="white", fg="black", width = 40, justify='left', textvariable=Student_Name)
         self.txtStudent_Name.grid(row=1, column=1)
-        #STUDENTADDRESS
+        
+        #COURSE
+        self.lblCourse = Label(leftFrameInner, text="Course", font=("Arial", 12, "bold"), bg="gray", fg="black", anchor=W, justify=LEFT)
+        self.lblCourse.grid(row=2, column=0, padx=5, sticky=W)
+        self.cbCourse = ttk.Combobox(leftFrameInner, font=("Arial", 12, "bold"), width = 38, justify='left', textvariable=Student_Course, state='readonly')
+        self.cbCourse['values'] = ('','BSIT','BSEM', 'BSCS')
+        self.cbCourse.current(0)
+        self.cbCourse.grid(row=2, column=1)
+        
+        #STUDENTADDRESS 
         self.lblStudent_Address = Label(leftFrameInner, text="Student Address", font=("Arial", 12, "bold"), bg="gray", fg="black", anchor=W, justify=LEFT)
-        self.lblStudent_Address.grid(row=2, column=0, padx=5, sticky=W)
+        self.lblStudent_Address.grid(row=3, column=0, padx=5, sticky=W)
         self.txtStudent_Address = Entry(leftFrameInner, font=("Arial", 12, "bold"), bg="white", fg="black", width = 40, justify='left', textvariable=Student_Address)
-        self.txtStudent_Address.grid(row=2, column=1)
+        self.txtStudent_Address.grid(row=3, column=1)
 
         #CONTACT NUMBER
         self.lblContactNumber = Label(leftFrameInner, text="Student Contact Number", font=("Arial", 12, "bold"), bg="gray", fg="black", anchor=W, justify=LEFT)
-        self.lblContactNumber.grid(row=3, column=0, padx=5, sticky=W)
+        self.lblContactNumber.grid(row=4, column=0, padx=5, sticky=W)
         self.txtContactNumber = Entry(leftFrameInner, font=("Arial", 12, "bold"), bg="white", fg="black", width = 40, justify='left', textvariable=Contact_Number)
-        self.txtContactNumber.grid(row=3, column=1)
+        self.txtContactNumber.grid(row=4, column=1)
         
         #STUDENTEMAIL
         self.lblStudent_Email = Label(leftFrameInner, text="Student Email", font=("Arial", 12, "bold"), bg="gray", fg="black", anchor=W, justify=LEFT)
-        self.lblStudent_Email.grid(row=4, column=0, padx=5, sticky=W)
+        self.lblStudent_Email.grid(row=5, column=0, padx=5, sticky=W)
         self.txtStudent_Email = Entry(leftFrameInner, font=("Arial", 12, "bold"), bg="white", fg="black", width = 40, justify='left', textvariable=Student_Email)
-        self.txtStudent_Email.grid(row=4, column=1)
+        self.txtStudent_Email.grid(row=5, column=1)
         
         #GUARDIAN NAME
         self.lblGuardian_Name = Label(leftFrameInner, text="Guardian Name", font=("Arial", 12, "bold"), bg="gray", fg="black", anchor=W, justify=LEFT)
-        self.lblGuardian_Name.grid(row=5, column=0, padx=5, sticky=W)
+        self.lblGuardian_Name.grid(row=6, column=0, padx=5, sticky=W)
         self.txtGuardian_Name = Entry(leftFrameInner, font=("Arial", 12, "bold"), bg="white", fg="black", width = 40, justify='left', textvariable=Guardian_Name)
-        self.txtGuardian_Name.grid(row=5, column=1)
+        self.txtGuardian_Name.grid(row=6, column=1)
         
         #GUARDIAN NUMBER
         self.lblPContact_Number = Label(leftFrameInner, text="Guardian Number", font=("Arial", 12, "bold"), bg="gray", fg="black", anchor=W, justify=LEFT)
-        self.lblPContact_Number.grid(row=6, column=0, padx=5, sticky=W)
+        self.lblPContact_Number.grid(row=7, column=0, padx=5, sticky=W)
         self.txtPContact_Number = Entry(leftFrameInner, font=("Arial", 12, "bold"), bg="white", fg="black", width = 40, justify='left', textvariable=PContact_Number)
-        self.txtPContact_Number.grid(row=6, column=1)
+        self.txtPContact_Number.grid(row=7, column=1)
 
 #---------------------------------------------------------------------------------------------------------------------#
         #UI DISPLAY OF DATA
@@ -237,12 +250,12 @@ class Student:
         self.studentlist.bind("<ButtonRelease-1>",studentRec)
         displayData()
         
-        self.btnAdd = Button(lowerFrame, font = ('arial',20,'bold'), text="Add", width=12, height=2, bg="gray", command=addData).grid(row=0,column=0,padx=10)
-        self.btnClear = Button(lowerFrame, font = ('arial',20,'bold'), text="Clear", width=12, height=2, bg="gray", command=iReset).grid(row=0,column=1,padx=10)
-        self.btnDisplay = Button(lowerFrame, font = ('arial',20,'bold'), text="Display", width=12, height=2, bg="gray", command=displayInfos).grid(row=0,column=2,padx=10)
-        self.btnEdit = Button(lowerFrame, font = ('arial',20,'bold'), text="Edit", width=12, height=2, bg="gray", command=editData).grid(row=0,column=3,padx=10)
-        self.btnDelete = Button(lowerFrame, font = ('arial',20,'bold'), text="Delete", width=12, height=2, bg="gray", command=deleteData).grid(row=0,column=4,padx=10)
-        self.btnExit = Button(lowerFrame, font = ('arial',20,'bold'), text="Exit", width=12, height=2, bg="gray", command=iExit).grid(row=0,column=5,padx=10)
+        self.btnAdd = Button(lowerFrame, font = ('arial',20,'bold'), text="Add", width=10, height=2, bg="gray", command=addData).grid(row=0,column=0,padx=10)
+        self.btnClear = Button(lowerFrame, font = ('arial',20,'bold'), text="Clear", width=10, height=2, bg="gray", command=iReset).grid(row=0,column=1,padx=10)
+        self.btnDisplay = Button(lowerFrame, font = ('arial',20,'bold'), text="Display", width=10, height=2, bg="gray", command=displayInfos).grid(row=0,column=2,padx=10)
+        self.btnEdit = Button(lowerFrame, font = ('arial',20,'bold'), text="Edit", width=10, height=2, bg="gray", command=editData).grid(row=0,column=3,padx=10)
+        self.btnDelete = Button(lowerFrame, font = ('arial',20,'bold'), text="Delete", width=10, height=2, bg="gray", command=deleteData).grid(row=0,column=4,padx=10)
+        self.btnExit = Button(lowerFrame, font = ('arial',20,'bold'), image=self.Exit_Btn, borderwidth=0, width=70, height=70, bg="gray", command=iExit).grid(row=0,column=5,padx=10)
 
         
 if __name__=='__main__':
